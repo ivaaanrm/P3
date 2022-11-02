@@ -44,6 +44,12 @@ Ejercicios básicos
    * Determine el mejor candidato para el periodo de pitch localizando el primer máximo secundario de la
      autocorrelación. Inserte a continuación el código correspondiente.
 
+```cpp
+for (iR = iRMax = r.begin() + npitch_min; iR < r.begin() + npitch_max; iR++) {
+      if (*iRMax < *iR) iRMax = iR;
+    }
+```
+
    * Implemente la regla de decisión sonoro o sordo e inserte el código correspondiente.
 
    * Puede serle útil seguir las instrucciones contenidas en el documento adjunto `código.pdf`.
