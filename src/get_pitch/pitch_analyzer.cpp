@@ -1,6 +1,7 @@
 /// @file
 
 #include <iostream>
+#include <stdio.h>
 #include <math.h>
 #include "pitch_analyzer.h"
 
@@ -13,6 +14,7 @@ namespace upc {
 
     for (unsigned int l = 0; l < r.size(); ++l) {
   		/// \TODO Compute the autocorrelation r[l]
+      /// \DONE
       r[l]= 0.0f;
       
       for(unsigned int n = l; n<x.size();n++){
@@ -57,8 +59,15 @@ namespace upc {
     /// \TODO Implement a rule to decide whether the sound is voiced or not.
     /// * You can use the standard features (pot, r1norm, rmaxnorm),
     ///   or compute and use other ones.
+    // printf("************\nPotencia: %4.2f\nr1norm: %4.2f\nrmaxnorm: %4.2f\n***************", pot, r1norm, rmaxnorm);
+    // pot -33, r1 0.94, rmax 0.40
+    // if((pot < -33 || r1norm < 0.96) && rmaxnorm < 0.40){
+    if((pot < -33 || r1norm < 0.96) && rmaxnorm < umaxnorm){
+      return true;
+    } else {
+      return false;
+    }
 
-    return true;
   }
 
   float PitchAnalyzer::compute_pitch(vector<float> & x) const {
@@ -76,7 +85,9 @@ namespace upc {
 
     vector<float>::const_iterator iR = r.begin(), iRMax = iR;
 
-    /// \TODO 
+    /// \TODO
+    /// \DONE 
+    /// Localizar máximo de la autocorrelation
 	/// Find the lag of the maximum value of the autocorrelation away from the origin.<br>
 	/// Choices to set the minimum value of the lag are:
 	///    - The first negative value of the autocorrelation.
@@ -95,7 +106,7 @@ namespace upc {
     //You can print these (and other) features, look at them using wavesurfer
     //Based on that, implement a rule for unvoiced
     //change to #if 1 and compile
-#if 0
+#if 1
     if (r[0] > 0.0F)
       cout << pot << '\t' << r[1]/r[0] << '\t' << r[lag]/r[0] << endl;
 #endif

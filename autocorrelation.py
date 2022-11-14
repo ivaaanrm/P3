@@ -10,7 +10,7 @@ signal, fm = sf.read("sonoro.wav")
 t = np.arange(0, len(signal)) / fm  
                                                  
 #Calculem autocorrelació i axis
-r = np.correlate(signal, signal, "same")
+r = np.correlate(signal, signal, "full")
 r = r / r[int(len(r)/2)] 
 raxis = np.arange(len(r))
 
