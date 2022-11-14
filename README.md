@@ -52,6 +52,9 @@ for (iR = iRMax = r.begin() + npitch_min; iR < r.begin() + npitch_max; iR++) {
 
    * Implemente la regla de decisión sonoro o sordo e inserte el código correspondiente.
 
+<img width="1439" alt="Screenshot 2022-11-03 at 12 53 25" src="https://user-images.githubusercontent.com/67743899/199715709-6242166b-b730-4cb4-802d-8e61714caa91.png">
+
+
    * Puede serle útil seguir las instrucciones contenidas en el documento adjunto `código.pdf`.
 
 - Una vez completados los puntos anteriores, dispondrá de una primera versión del estimador de pitch. El 
