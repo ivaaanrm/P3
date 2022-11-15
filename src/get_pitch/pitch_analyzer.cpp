@@ -36,6 +36,10 @@ namespace upc {
     switch (win_type) {
     case HAMMING:
       /// \TODO Implement the Hamming window
+      /// \DONE
+      for(unsigned int n = 0; n<frameLen;n++){
+        window[n] = 0.54 - 0.46*cos(2*M_PI*n/(frameLen-1));
+      }
       break;
     case RECT:
     default:
