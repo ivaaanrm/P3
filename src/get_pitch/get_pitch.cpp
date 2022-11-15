@@ -27,7 +27,9 @@ Usage:
 Options:
     -h, --help  Show this screen
     --version   Show the version of the project
-    -m REAL, --umaxnorm=REAL  Umbral del maximo de la autocorrelación [default: 0.5] 
+    -m REAL, --umaxnorm=REAL  Umbral del maximo de la autocorrelación [default: 0.59] 
+    -u REAL, --u1norm=REAL  Umbral  de la autocorrelación [default: 0.96] 
+    -p REAL, --maxpot=REAL  Umbral del maximo de la potencia [default: -33] 
 
 Arguments:
     input-wav   Wave file with the audio signal
@@ -49,6 +51,9 @@ int main(int argc, const char *argv[]) {
 	std::string output_txt = args["<output-txt>"].asString();
   
   float umaxnorm = std::stof(args["--umaxnorm"].asString());
+  float u1norm = std::stof(args["--u1norm"].asString());
+  float maxpot = std::stof(args["--maxpot"].asString());
+
 
   // Read input sound file
   unsigned int rate;
@@ -62,7 +67,7 @@ int main(int argc, const char *argv[]) {
   int n_shift = rate * FRAME_SHIFT;
 
   // Define analyzer
-  PitchAnalyzer analyzer(n_len, rate, PitchAnalyzer::RECT, 50, 500, umaxnorm);
+  PitchAnalyzer analyzer(n_len, rate, PitchAnalyzer::RECT, 50, 500, umaxnorm, u1norm, maxpot);
 
   /// \TODO
   /// Preprocess the input signal in order to ease pitch estimation. For instance,

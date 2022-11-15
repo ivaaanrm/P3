@@ -32,6 +32,8 @@ namespace upc {
       npitch_max; ///< maximum value of pitch period, in samples
 
     float umaxnorm;
+    float u1norm;
+    float maxpot;
  
 	///
 	/// Computes correlation from lag=0 to r.size()
@@ -56,7 +58,9 @@ namespace upc {
 					float min_F0 = MIN_F0,		///< Pitch range should be restricted to be above this value
 					float max_F0 = MAX_F0,		///< Pitch range should be restricted to be below this value
           
-          float umaxnorm_ = 0.4
+          float umaxnorm_ = 0,
+          float u1norm_ = 0,
+          float maxpot_ = 0
 				 )
 	{
       frameLen = fLen;
@@ -64,6 +68,8 @@ namespace upc {
       set_f0_range(min_F0, max_F0);
       set_window(w);
       umaxnorm = umaxnorm_;
+      maxpot = maxpot_;
+      u1norm = u1norm_;
     }
 
 	///
