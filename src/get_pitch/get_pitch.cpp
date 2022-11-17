@@ -73,7 +73,7 @@ int main(int argc, const char *argv[]) {
   /// \TODO
   /// Preprocess the input signal in order to ease pitch estimation. For instance,
   /// central-clipping or low pass filtering may be used.
-float alpha = 0.0042;
+float alpha = 0.0005;
 
   // Iterate for each frame and save values in f0 vector
   vector<float>::iterator iX;
@@ -91,7 +91,6 @@ float alpha = 0.0042;
   /// \TODO
   /// Postprocess the estimation in order to supress errors. For instance, a median filter
   /// or time-warping may be used.
-
   /// Postprocess the estimation in order to supress errors. For instance, a median filter
   /// or time-warping may be used.
   vector<float>::iterator iF0;
