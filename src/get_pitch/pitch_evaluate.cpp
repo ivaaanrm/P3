@@ -17,9 +17,9 @@ void compare(const vector<float> &vref, const vector<float> &vtest, int &num_voi
   int &num_unvoiced, int &num_voiced_unvoiced, int &num_unvoiced_voiced,
   int &num_voiced_voiced, int &num_gross_errors, float &fine_error);
 
-// void print_results(int nframes, int num_voiced, int num_unvoiced,
-//   int num_voiced_unvoiced, int num_unvoiced_voiced, int num_voiced_voiced,
-//   int num_gross_errors,  float fine_errori, string filename);
+void print_results(int nframes, int num_voiced, int num_unvoiced,
+  int num_voiced_unvoiced, int num_unvoiced_voiced, int num_voiced_voiced,
+  int num_gross_errors,  float fine_errori, string filename);
 
 const float gross_threshold = 0.2F; //gross error:  +/-20 %
 
