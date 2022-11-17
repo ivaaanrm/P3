@@ -63,7 +63,7 @@ namespace upc {
     /// \TODO Implement a rule to decide whether the sound is voiced or not.
     /// * You can use the standard features (pot, r1norm, rmaxnorm),
     ///   or compute and use other ones.
-    printf("************\nPotencia: %4.2f\nr1norm: %4.2f\nrmaxnorm: %4.2f\n***************", maxpot, u1norm, umaxnorm);
+    // printf("************\nPotencia: %4.2f\nr1norm: %4.2f\nrmaxnorm: %4.2f\n***************", maxpot, u1norm, umaxnorm);
     // pot -33, r1 0.94, rmax 0.40
     // if((pot < -33 || r1norm < 0.96) && rmaxnorm < 0.40){
     if((pot < maxpot || r1norm < u1norm) && rmaxnorm < umaxnorm){
