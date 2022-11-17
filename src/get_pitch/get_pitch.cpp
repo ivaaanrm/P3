@@ -42,6 +42,7 @@ int main(int argc, const char *argv[]) {
 	/// \TODO 
 	///  Modify the program syntax and the call to **docopt()** in order to
 	///  add options and arguments to the program.
+  /// \DONE
     std::map<std::string, docopt::value> args = docopt::docopt(USAGE,
         {argv + 1, argv + argc},	// array of arguments, without the program name
         true,    // show help if requested
@@ -67,11 +68,12 @@ int main(int argc, const char *argv[]) {
   int n_shift = rate * FRAME_SHIFT;
 
   // Define analyzer
-  PitchAnalyzer analyzer(n_len, rate, PitchAnalyzer::RECT, 50, 500, umaxnorm, u1norm, maxpot);
+  PitchAnalyzer analyzer(n_len, rate, PitchAnalyzer::HAMMING, 50, 500, umaxnorm, u1norm, maxpot);
 
   /// \TODO
   /// Preprocess the input signal in order to ease pitch estimation. For instance,
   /// central-clipping or low pass filtering may be used.
+
   
   // Iterate for each frame and save values in f0 vector
   vector<float>::iterator iX;
@@ -85,6 +87,28 @@ int main(int argc, const char *argv[]) {
   /// Postprocess the estimation in order to supress errors. For instance, a median filter
   /// or time-warping may be used.
 
+  /// Postprocess the estimation in order to supress errors. For instance, a median filter
+  /// or time-warping may be used.
+  vector<float>::iterator iF0;
+  vector<float> f0_post;
+  for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
+    if (*iF0 == 0) {
+      f0_post.push_back(0);
+    } else {
+      float f = *iF0;
+      float f1 = *(iF0 + 1);
+      float f2 = *(iF0 + 2);
+      if (f1 == 0) {
+        f0_post.push_back(f);
+      } else if (f2 == 0) {
+        f0_post.push_back((f + f1) / 2);
+      } else {
+        f0_post.push_back((f + f1 + f2) / 3);
+      }
+    }
+  }
+
+
   // Write f0 contour into the output file
   ofstream os(output_txt);
   if (!os.good()) {
@@ -93,9 +117,21 @@ int main(int argc, const char *argv[]) {
   }
 
   os << 0 << '\n'; //pitch at t=0
-  for (iX = f0.begin(); iX != f0.end(); ++iX) 
-    os << *iX << '\n';
+  for (iF0 = f0_post.begin(); iF0 != f0_post.end(); ++iF0) 
+    os << *iF0 << '\n';
   os << 0 << '\n';//pitch at t=Dur
+
+  // // Write f0 contour into the output file
+  // ofstream os(output_txt);
+  // if (!os.good()) {
+  //   cerr << "Error reading output file " << output_txt << " (" << strerror(errno) << ")\n";
+  //   return -3;
+  // }
+
+  // os << 0 << '\n'; //pitch at t=0
+  // for (iX = f0.begin(); iX != f0.end(); ++iX) 
+  //   os << *iX << '\n';
+  // os << 0 << '\n';//pitch at t=Dur
 
   return 0;
 }
