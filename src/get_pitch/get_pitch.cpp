@@ -92,6 +92,45 @@ float alpha = 0.00098;
   /// Postprocess the estimation in order to supress errors. For instance, a median filter
   /// or time-warping may be used.
 
+  // filter that eliminates the single voiced frames
+  vector<float>::iterator iF0;
+  for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
+    if (*iF0 != 0.0) {
+      if (iF0 == f0.begin()) {
+        if (*(iF0 + 1) == 0.0) {
+          *iF0 = 0.0;
+        }
+      } else if (iF0 == f0.end() - 1) {
+        if (*(iF0 - 1) == 0.0) {
+          *iF0 = 0.0;
+        }
+      } else {
+        if (*(iF0 - 1) == 0.0 && *(iF0 + 1) == 0.0) {
+          *iF0 = 0.0;
+        }
+      }
+    }
+  }
+
+  // filter that fills the single unvoiced frames
+  for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
+    if (*iF0 == 0.0) {
+      if (iF0 == f0.begin()) {
+        if (*(iF0 + 1) != 0.0) {
+          *iF0 = *(iF0 + 1);
+        }
+      } else if (iF0 == f0.end() - 1) {
+        if (*(iF0 - 1) != 0.0) {
+          *iF0 = *(iF0 - 1);
+        }
+      } else {
+        if (*(iF0 - 1) != 0.0 && *(iF0 + 1) != 0.0) {
+          *iF0 = (*(iF0 - 1) + *(iF0 + 1)) / 2;
+        }
+      }
+    }
+  }
+
 
   //Write f0 contour into the output file
   ofstream os(output_txt);
