@@ -27,9 +27,9 @@ Usage:
 Options:
     -h, --help  Show this screen
     --version   Show the version of the project
-    -m REAL, --umaxnorm=REAL  Umbral del maximo de la autocorrelación [default: 0.59] 
-    -u REAL, --u1norm=REAL  Umbral  de la autocorrelación [default: 0.96] 
-    -p REAL, --maxpot=REAL  Umbral del maximo de la potencia [default: -33] 
+    -m REAL, --umaxnorm=REAL  Umbral del maximo de la autocorrelación [default: 0.43] 
+    -u REAL, --u1norm=REAL  Umbral  de la autocorrelación [default: 0.95]] 
+    -p REAL, --maxpot=REAL  Umbral del maximo de la potencia [default: -43.3] 
 
 Arguments:
     input-wav   Wave file with the audio signal
@@ -73,7 +73,7 @@ int main(int argc, const char *argv[]) {
   /// \TODO
   /// Preprocess the input signal in order to ease pitch estimation. For instance,
   /// central-clipping or low pass filtering may be used.
-float alpha = 0.0005;
+float alpha = 0.00098;
 
   // Iterate for each frame and save values in f0 vector
   vector<float>::iterator iX;
@@ -91,29 +91,9 @@ float alpha = 0.0005;
   /// \TODO
   /// Postprocess the estimation in order to supress errors. For instance, a median filter
   /// or time-warping may be used.
-  /// Postprocess the estimation in order to supress errors. For instance, a median filter
-  /// or time-warping may be used.
-  vector<float>::iterator iF0;
-  vector<float> f0_post;
-  for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
-    if (*iF0 == 0) {
-      f0_post.push_back(0);
-    } else {
-      float f = *iF0;
-      float f1 = *(iF0 + 1);
-      float f2 = *(iF0 + 2);
-      if (f1 == 0) {
-        f0_post.push_back(f);
-      } else if (f2 == 0) {
-        f0_post.push_back((f + f1) / 2);
-      } else {
-        f0_post.push_back((f + f1 + f2) / 3);
-      }
-    }
-  }
 
 
-  // Write f0 contour into the output file
+  //Write f0 contour into the output file
   ofstream os(output_txt);
   if (!os.good()) {
     cerr << "Error reading output file " << output_txt << " (" << strerror(errno) << ")\n";
@@ -121,21 +101,9 @@ float alpha = 0.0005;
   }
 
   os << 0 << '\n'; //pitch at t=0
-  for (iF0 = f0_post.begin(); iF0 != f0_post.end(); ++iF0) 
-    os << *iF0 << '\n';
+  for (iX = f0.begin(); iX != f0.end(); ++iX) 
+    os << *iX << '\n';
   os << 0 << '\n';//pitch at t=Dur
-
-  // // Write f0 contour into the output file
-  // ofstream os(output_txt);
-  // if (!os.good()) {
-  //   cerr << "Error reading output file " << output_txt << " (" << strerror(errno) << ")\n";
-  //   return -3;
-  // }
-
-  // os << 0 << '\n'; //pitch at t=0
-  // for (iX = f0.begin(); iX != f0.end(); ++iX) 
-  //   os << *iX << '\n';
-  // os << 0 << '\n';//pitch at t=Dur
 
   return 0;
 }
