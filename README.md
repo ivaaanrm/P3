@@ -52,8 +52,16 @@ for (iR = iRMax = r.begin() + npitch_min; iR < r.begin() + npitch_max; iR++) {
 
    * Implemente la regla de decisión sonoro o sordo e inserte el código correspondiente.
 
-<img width="1439" alt="Screenshot 2022-11-03 at 12 53 25" src="https://user-images.githubusercontent.com/67743899/199715709-6242166b-b730-4cb4-802d-8e61714caa91.png">
-
+```cpp
+  bool PitchAnalyzer::unvoiced(float pot, float r1norm, float rmaxnorm) const{
+    if ((pot < maxpot || r1norm < u1norm) && rmaxnorm < umaxnorm){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+```
 
    * Puede serle útil seguir las instrucciones contenidas en el documento adjunto `código.pdf`.
 
@@ -68,18 +76,19 @@ for (iR = iRMax = r.begin() + npitch_min; iR < r.begin() + npitch_max; iR++) {
 		(r[0]), la autocorrelación normalizada de uno (r1norm = r[1] / r[0]) y el valor de la
 		autocorrelación en su máximo secundario (rmaxnorm = r[lag] / r[0]).
 
-		Puede considerar, también, la conveniencia de usar la tasa de cruces por cero.
+<img width="1439" alt="Screenshot 2022-11-03 at 12 53 25" src="https://user-images.githubusercontent.com/67743899/199715709-6242166b-b730-4cb4-802d-8e61714caa91.png">
 
-	    Recuerde configurar los paneles de datos para que el desplazamiento de ventana sea el adecuado, que
-		en esta práctica es de 15 ms.
+Puede considerar, también, la conveniencia de usar la tasa de cruces por cero.
 
-      - Use el estimador de pitch implementado en el programa `wavesurfer` en una señal de prueba y compare
-	    su resultado con el obtenido por la mejor versión de su propio sistema.  Inserte una gráfica
-		ilustrativa del resultado de ambos estimadores.
-     
-		Aunque puede usar el propio Wavesurfer para obtener la representación, se valorará
-	 	el uso de alternativas de mayor calidad (particularmente Python).
-  
+Recuerde configurar los paneles de datos para que el desplazamiento de ventana sea el adecuado, que
+en esta práctica es de 15 ms.
+
+- Use el estimador de pitch implementado en el programa `wavesurfer` en una señal de prueba y compare
+    su resultado con el obtenido por la mejor versión de su propio sistema.  Inserte una gráfica ilustrativa del resultado de ambos estimadores. 
+    Aunque puede usar el propio Wavesurfer para obtener la representación, se valorará el uso de alternativas de mayor calidad (particularmente Python).
+		
+![Figure_2](https://user-images.githubusercontent.com/82904867/202551559-ac9fd0d3-6394-49f7-b23a-db26b2a0509b.png)
+
   * Optimice los parámetros de su sistema de estimación de pitch e inserte una tabla con las tasas de error
     y el *score* TOTAL proporcionados por `pitch_evaluate` en la evaluación de la base de datos 
 	`pitch_db/train`..
@@ -101,8 +110,37 @@ Ejercicios de ampliación
   de pitch.
 
   Entre las posibles mejoras, puede escoger una o más de las siguientes:
+  * Enventanado de Hamming
 
+```cpp
+case HAMMING:
+	for (unsigned int n = 0; n < frameLen; n++){
+	window[n] = 0.54 - 0.46 * cos(2 * M_PI * n / (frameLen - 1));
+	}
+break;
+```
+  
   * Técnicas de preprocesado: filtrado paso bajo, diezmado, *center clipping*, etc.
+  
+  **Como técnica de preprocesado hemos decidio usar center clipping que consiste en anular los valores de x[n] de magnitud pequeña.**
+   ```cpp
+  vector<float>::iterator iX;
+  vector<float> f0;
+  float alpha = 0.00071;
+  float f = 0.0;
+  for (iX = x.begin(); iX + n_len < x.end(); iX = iX + n_shift){
+    // anulamos los valores de x[n] de magnitud pequeña.
+    if (*iX<alpha && * iX> - alpha){
+      f = 0.0;
+    }
+    else{
+      f = analyzer(iX, iX + n_len);
+    }
+    f0.push_back(f);
+  }
+
+```
+  
   * Técnicas de postprocesado: filtro de mediana, *dynamic time warping*, etc.
   * Métodos alternativos a la autocorrelación: procesado cepstral, *average magnitude difference function*
     (AMDF), etc.
