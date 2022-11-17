@@ -78,6 +78,8 @@ for (iR = iRMax = r.begin() + npitch_min; iR < r.begin() + npitch_max; iR++) {
 
 <img width="1439" alt="Screenshot 2022-11-03 at 12 53 25" src="https://user-images.githubusercontent.com/67743899/199715709-6242166b-b730-4cb4-802d-8e61714caa91.png">
 
+![Figure_1](https://user-images.githubusercontent.com/82904867/202567936-148ec8ea-b96d-4fd4-8269-1c4fad4f1e74.png)
+
 Puede considerar, también, la conveniencia de usar la tasa de cruces por cero.
 
 Recuerde configurar los paneles de datos para que el desplazamiento de ventana sea el adecuado, que
@@ -93,6 +95,9 @@ en esta práctica es de 15 ms.
     y el *score* TOTAL proporcionados por `pitch_evaluate` en la evaluación de la base de datos 
 	`pitch_db/train`..
 
+![image](https://user-images.githubusercontent.com/82904867/202567190-69d3aa62-4180-4f0e-a246-3b202ac64fef.png)
+
+
 Ejercicios de ampliación
 ------------------------
 
@@ -105,6 +110,10 @@ Ejercicios de ampliación
 
   * Inserte un *pantallazo* en el que se vea el mensaje de ayuda del programa y un ejemplo de utilización
     con los argumentos añadidos.
+    
+    ![image](https://user-images.githubusercontent.com/82904867/202566452-fa8def99-478e-412a-8718-0e9a0675a5d8.png)
+![image](https://user-images.githubusercontent.com/82904867/202570027-64760fd3-8d25-4bc8-a129-886995fc54f1.png)
+
 
 - Implemente las técnicas que considere oportunas para optimizar las prestaciones del sistema de estimación
   de pitch.
