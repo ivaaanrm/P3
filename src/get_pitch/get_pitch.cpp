@@ -68,12 +68,12 @@ int main(int argc, const char *argv[]) {
   int n_shift = rate * FRAME_SHIFT;
 
   // Define analyzer
-  PitchAnalyzer analyzer(n_len, rate, PitchAnalyzer::HAMMING, 50, 500, umaxnorm, u1norm, maxpot);
+  PitchAnalyzer analyzer(n_len, rate, PitchAnalyzer::RECT, 50, 500, umaxnorm, u1norm, maxpot);
 
   /// \TODO
   /// Preprocess the input signal in order to ease pitch estimation. For instance,
   /// central-clipping or low pass filtering may be used.
-float alpha = 0.00098;
+float alpha = 0.00071;
 
   // Iterate for each frame and save values in f0 vector
   vector<float>::iterator iX;
