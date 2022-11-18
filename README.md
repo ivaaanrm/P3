@@ -78,7 +78,8 @@ for (iR = iRMax = r.begin() + npitch_min; iR < r.begin() + npitch_max; iR++) {
 
 <img width="1439" alt="Screenshot 2022-11-03 at 12 53 25" src="https://user-images.githubusercontent.com/67743899/199715709-6242166b-b730-4cb4-802d-8e61714caa91.png">
 
-![Figure_1](https://user-images.githubusercontent.com/82904867/202567936-148ec8ea-b96d-4fd4-8269-1c4fad4f1e74.png)
+![Figure_1](https://user-images.githubusercontent.com/82904867/202670072-6c7e8221-ce75-45fe-aa81-62fc8e3ad7f8.png)
+
 
 Puede considerar, también, la conveniencia de usar la tasa de cruces por cero.
 
@@ -151,6 +152,63 @@ break;
 ```
   
   * Técnicas de postprocesado: filtro de mediana, *dynamic time warping*, etc.
+  
+   **Como técnica de preprocesado hemos decidio usar filtros de mediana con el objetivo de eliminar valores nulos en medio tramos sonoros y valores de pitch en medio de tramos sordos.**
+  
+```cpp
+  float avgPitch = 0;
+  int numPitch = 0;
+
+  // filter that eliminates the single voiced frames
+  vector<float>::iterator iF0;
+  for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
+    if (*iF0 != 0.0) {
+      avgPitch += *iF0;
+      numPitch++;
+      if (iF0 == f0.begin()) {
+        if (*(iF0 + 1) == 0.0) {
+          *iF0 = 0.0;
+        }
+      } else if (iF0 == f0.end() - 1) {
+        if (*(iF0 - 1) == 0.0) {
+          *iF0 = 0.0;
+        }
+      } else {
+        if (*(iF0 - 1) == 0.0 && *(iF0 + 1) == 0.0) {
+          *iF0 = 0.0;
+        }
+      }
+    }
+  }
+
+  // filter that fills the single unvoiced frames
+  for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
+    if (*iF0 == 0.0) {
+      if (iF0 == f0.begin()) {
+        if (*(iF0 + 1) != 0.0) {
+          *iF0 = *(iF0 + 1);
+        }
+      } else if (iF0 == f0.end() - 1) {
+        if (*(iF0 - 1) != 0.0) {
+          *iF0 = *(iF0 - 1);
+        }
+      } else {
+        if (*(iF0 - 1) != 0.0 && *(iF0 + 1) != 0.0) {
+          *iF0 = (*(iF0 - 1) + *(iF0 + 1)) / 2;
+        }
+      }
+    }
+  }
+
+  avgPitch = avgPitch / numPitch;
+
+  for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
+    if (*iF0 >= avgPitch*1.46){
+      *iF0 = avgPitch*0.81;
+    }
+  }
+```
+  
   * Métodos alternativos a la autocorrelación: procesado cepstral, *average magnitude difference function*
     (AMDF), etc.
   * Optimización **demostrable** de los parámetros que gobiernan el estimador, en concreto, de los que
