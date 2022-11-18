@@ -27,9 +27,9 @@ Usage:
 Options:
     -h, --help  Show this screen
     --version   Show the version of the project
-    -m REAL, --umaxnorm=REAL  Umbral del maximo de la autocorrelación [default: 0.43] 
-    -u REAL, --u1norm=REAL  Umbral  de la autocorrelación [default: 0.95]] 
-    -p REAL, --maxpot=REAL  Umbral del maximo de la potencia [default: -43.3] 
+    -m REAL, --umaxnorm=REAL  Umbral del maximo de la autocorrelación [default: 0.429] 
+    -u REAL, --u1norm=REAL  Umbral  de la autocorrelación [default: 0.953] 
+    -p REAL, --maxpot=REAL  Umbral del maximo de la potencia [default: -38.0] 
 
 Arguments:
     input-wav   Wave file with the audio signal
@@ -73,11 +73,14 @@ int main(int argc, const char *argv[]) {
   /// \TODO
   /// Preprocess the input signal in order to ease pitch estimation. For instance,
   /// central-clipping or low pass filtering may be used.
-float alpha = 0.00071;
+  /// \DONE
+
+  
 
   // Iterate for each frame and save values in f0 vector
   vector<float>::iterator iX;
   vector<float> f0;
+  float alpha = 0.00072;
   float f = 0.0;
   for (iX = x.begin(); iX + n_len < x.end(); iX = iX + n_shift) {
       if (*iX < alpha && *iX > -alpha){ 
@@ -91,11 +94,17 @@ float alpha = 0.00071;
   /// \TODO
   /// Postprocess the estimation in order to supress errors. For instance, a median filter
   /// or time-warping may be used.
+  /// \DONE
+
+  float avgPitch = 0;
+  int numPitch = 0;
 
   // filter that eliminates the single voiced frames
   vector<float>::iterator iF0;
   for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
     if (*iF0 != 0.0) {
+      avgPitch += *iF0;
+      numPitch++;
       if (iF0 == f0.begin()) {
         if (*(iF0 + 1) == 0.0) {
           *iF0 = 0.0;
@@ -131,6 +140,13 @@ float alpha = 0.00071;
     }
   }
 
+  avgPitch = avgPitch / numPitch;
+
+  for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
+    if (*iF0 >= avgPitch*1.46){
+      *iF0 = avgPitch*0.81;
+    }
+  }
 
   //Write f0 contour into the output file
   ofstream os(output_txt);

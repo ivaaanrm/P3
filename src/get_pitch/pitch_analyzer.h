@@ -40,6 +40,11 @@ namespace upc {
 	///
     void autocorrelation(const std::vector<float> &x, std::vector<float> &r) const;
 
+  ///
+  /// Computes AMDF to get the pitch period
+  ///
+    void AMDF(const std::vector<float> &x, std::vector<float> &a) const;
+
 	///
 	/// Returns the pitch (in Hz) of input frame x
 	///

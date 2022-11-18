@@ -63,15 +63,13 @@ namespace upc {
     /// \TODO Implement a rule to decide whether the sound is voiced or not.
     /// * You can use the standard features (pot, r1norm, rmaxnorm),
     ///   or compute and use other ones.
-    // printf("************\nPotencia: %4.2f\nr1norm: %4.2f\nrmaxnorm: %4.2f\n***************", maxpot, u1norm, umaxnorm);
-    // pot -33, r1 0.94, rmax 0.40
-    // if((pot < -33 || r1norm < 0.96) && rmaxnorm < 0.40){
+    /// \DONE
+
     if((pot < maxpot || r1norm < u1norm) && rmaxnorm < umaxnorm){
       return true;
     } else {
       return false;
     }
-
   }
 
   float PitchAnalyzer::compute_pitch(vector<float> & x) const {
@@ -99,6 +97,7 @@ namespace upc {
     ///	   .
 	/// In either case, the lag should not exceed that of the minimum value of the pitch.
 
+    /// GET lag of the maximum value of the autocorrelation away from the origin
     for (iR = iRMax = r.begin() + npitch_min; iR < r.begin() + npitch_max; iR++) {
       if (*iRMax < *iR) iRMax = iR;
     }
@@ -112,12 +111,13 @@ namespace upc {
     //change to #if 1 and compile
 #if 1
     if (r[0] > 0.0F)
-      // cout << pot << '\t' << r[1]/r[0] << '\t' << r[lag]/r[0] << endl;
+
 #endif
     
-    if (unvoiced(pot, r[1]/r[0], r[lag]/r[0]))
+    if (unvoiced(pot, r[1]/r[0], r[lag]/r[0])){
       return 0;
-    else
+      }else{
       return (float) samplingFreq/(float) lag;
+      }
   }
 }
