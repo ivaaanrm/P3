@@ -19,11 +19,13 @@ pitch_ref = [float(i) for i in open("prueba.f0ref"). readlines()]
 power = [float(dat[0]) for dat in datContent]
 r1norm = [float(dat[1]) for dat in datContent]
 rmaxnorm = [float(dat[2]) for dat in datContent]
+zcr = [float(dat[3]) for dat in datContent]
+
 
 print(len(pitch_ref))
 
 #Plots
-fig1, axs = plt.subplots(3,1)
+fig1, axs = plt.subplots(4,1)
 fig1.set_size_inches(8,6)
 
 axs[0].set_title("potencia de la señal")
@@ -43,6 +45,12 @@ axs[2].set_ylabel("")
 axs[2].set_xlabel("")
 axs[2].grid(True)
 axs[2].plot(rmaxnorm)
+
+axs[3].set_title("tasa de cruces por cero")
+axs[3].set_ylabel("")
+axs[3].set_xlabel("")
+axs[3].grid(True)
+axs[3].plot(zcr)
 plt.tight_layout()
 
 

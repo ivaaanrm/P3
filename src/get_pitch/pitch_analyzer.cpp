@@ -27,6 +27,30 @@ namespace upc {
       r[0] = 1e-10; 
   }
 
+  int sgn(float x) {
+    if (x > 0.0) return 1;
+    if (x < 0.0) return -1;
+    return 0;
+  }
+
+  float PitchAnalyzer::compute_zcr(std::vector<float> & x) const {
+    int N = x.size();
+    float fm = samplingFreq;
+    float sum = 0.0;
+    for (int i = 0; i < N; i++){
+        if (sgn(x[i]) != sgn(x[i-1])){
+            sum++;
+        }
+    }
+    return fm/(2*(N-1))*sum;
+  }
+
+
+
+
+
+
+
   void PitchAnalyzer::set_window(Window win_type) {
     if (frameLen == 0)
       return;
@@ -59,13 +83,14 @@ namespace upc {
       npitch_max = frameLen/2;
   }
 
-  bool PitchAnalyzer::unvoiced(float pot, float r1norm, float rmaxnorm) const {
+  bool PitchAnalyzer::unvoiced(float pot, float r1norm, float rmaxnorm, float zcr) const {
     /// \TODO Implement a rule to decide whether the sound is voiced or not.
     /// * You can use the standard features (pot, r1norm, rmaxnorm),
     ///   or compute and use other ones.
     /// \DONE
+    float minZcr = 5000.0;
 
-    if((pot < maxpot || r1norm < u1norm) && rmaxnorm < umaxnorm){
+    if((pot < maxpot || r1norm < u1norm) && rmaxnorm < umaxnorm || zcr > minZcr){
       return true;
     } else {
       return false;
@@ -106,15 +131,22 @@ namespace upc {
 
     float pot = 10 * log10(r[0]);
 
+    // zcr 
+    float zcr = compute_zcr(x);
+
     //You can print these (and other) features, look at them using wavesurfer
     //Based on that, implement a rule for unvoiced
     //change to #if 1 and compile
 #if 1
     if (r[0] > 0.0F)
+    printf("%4.4f\t%4.4f\t%4.4f\t%4.4f\n", pot, r[1]/r[0], r[lag]/r[0], zcr);
+    // printf("%4.4f", pot);
+      // cout << pot << '\t' << r[1]/r[0] << '\t' << r[lag]/r[0] << '\t' << zcr << endl;
+
 
 #endif
-    
-    if (unvoiced(pot, r[1]/r[0], r[lag]/r[0])){
+
+    if (unvoiced(pot, r[1]/r[0], r[lag]/r[0], zcr)){
       return 0;
       }else{
       return (float) samplingFreq/(float) lag;

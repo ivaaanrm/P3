@@ -80,14 +80,18 @@ int main(int argc, const char *argv[]) {
   // Iterate for each frame and save values in f0 vector
   vector<float>::iterator iX;
   vector<float> f0;
-  float alpha = 0.00072;
   float f = 0.0;
+  float alpha = 0.00049;
+  for (iX = x.begin(); iX < x.end(); iX++) {
+
+    if (*iX < alpha && *iX > -alpha){ 
+      *iX = 0.0;
+    }
+    // printf("%f ",*iX);
+  }
+
   for (iX = x.begin(); iX + n_len < x.end(); iX = iX + n_shift) {
-      if (*iX < alpha && *iX > -alpha){ 
-        f = 0.0;
-      } else {
-        f = analyzer(iX, iX + n_len);
-      }
+    f = analyzer(iX, iX + n_len);
     f0.push_back(f);
   }
 

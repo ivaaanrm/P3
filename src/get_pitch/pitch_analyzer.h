@@ -53,7 +53,12 @@ namespace upc {
 	///
 	/// Returns true is the frame is unvoiced
 	///
-    bool unvoiced(float pot, float r1norm, float rmaxnorm) const;
+    bool unvoiced(float pot, float r1norm, float rmaxnorm, float zcr) const;
+
+  ///
+  /// Returns zcr
+  ///
+    float compute_zcr(std::vector<float> & x) const;
 
 
   public:
