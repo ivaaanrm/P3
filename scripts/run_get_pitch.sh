@@ -40,7 +40,7 @@ do
     esac        
 done 
 # Put here the program (maybe with path)
-GETF0="get_pitch -m $param1 -z $param2 -u $param3 -p $param4 -a $param5"
+GETF0="/root/PAV/bin/get_pitch -m $param1 -z $param2 -u $param3 -p $param4 -a $param5"
 
 for fwav in pitch_db/train/*.wav; do    
     ff0=${fwav/.wav/.f0}
