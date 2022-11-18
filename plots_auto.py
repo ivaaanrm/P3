@@ -70,9 +70,35 @@ axs[1].grid(True)
 axs[1].plot(pitch_ref)
 
 plt.tight_layout()
-plt.show()
 
 """ Save zcr data in file"""
 with open("rmaxnorm.dat", "w") as f:
     for i in rmaxnorm:
         f.write(str(i)+"\n")
+
+
+
+fig3, axs = plt.subplots(3,1)
+fig3.set_size_inches(8,6)
+
+axs[0].set_title("Pitch referencia")
+axs[0].set_ylabel("")
+axs[0].set_xlabel("")
+axs[0].grid(True)
+axs[0].scatter(np.arange(len(pitch_ref)),pitch_ref)
+
+axs[1].set_title("autocorrelación en su máximo secundario")
+axs[1].set_ylabel("")
+axs[1].set_xlabel("")
+axs[1].grid(True)
+axs[1].plot(rmaxnorm)
+
+axs[2].set_title("tasa de cruces por cero")
+axs[2].set_ylabel("")
+axs[2].set_xlabel("")
+axs[2].grid(True)
+axs[2].plot(zcr)
+plt.tight_layout()
+
+
+plt.show()

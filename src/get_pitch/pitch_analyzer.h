@@ -34,6 +34,7 @@ namespace upc {
     float umaxnorm;
     float u1norm;
     float maxpot;
+    float minZcr;
  
 	///
 	/// Computes correlation from lag=0 to r.size()
@@ -70,7 +71,8 @@ namespace upc {
           
           float umaxnorm_ = 0,
           float u1norm_ = 0,
-          float maxpot_ = 0
+          float maxpot_ = 0, 
+          float minZcr_ = 0.0
 				 )
 	{
       frameLen = fLen;
@@ -80,6 +82,7 @@ namespace upc {
       umaxnorm = umaxnorm_;
       maxpot = maxpot_;
       u1norm = u1norm_;
+      minZcr = minZcr_;
     }
 
 	///

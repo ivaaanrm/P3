@@ -28,6 +28,7 @@ Options:
     -h, --help  Show this screen
     --version   Show the version of the project
     -m REAL, --umaxnorm=REAL  Umbral del maximo de la autocorrelación [default: 0.429] 
+    -z REAL, --minZcr=REAL  Umbral del minimo de la tasa de cruces por cero [default: 5000.0] 
     -u REAL, --u1norm=REAL  Umbral  de la autocorrelación [default: 0.953] 
     -p REAL, --maxpot=REAL  Umbral del maximo de la potencia [default: -38.0] 
 
@@ -52,6 +53,7 @@ int main(int argc, const char *argv[]) {
 	std::string output_txt = args["<output-txt>"].asString();
   
   float umaxnorm = std::stof(args["--umaxnorm"].asString());
+  float minZcr = std::stof(args["--minZcr"].asString());
   float u1norm = std::stof(args["--u1norm"].asString());
   float maxpot = std::stof(args["--maxpot"].asString());
 
@@ -68,7 +70,7 @@ int main(int argc, const char *argv[]) {
   int n_shift = rate * FRAME_SHIFT;
 
   // Define analyzer
-  PitchAnalyzer analyzer(n_len, rate, PitchAnalyzer::RECT, 50, 500, umaxnorm, u1norm, maxpot);
+  PitchAnalyzer analyzer(n_len, rate, PitchAnalyzer::RECT, 50, 500, umaxnorm, u1norm, maxpot, minZcr);
 
   /// \TODO
   /// Preprocess the input signal in order to ease pitch estimation. For instance,

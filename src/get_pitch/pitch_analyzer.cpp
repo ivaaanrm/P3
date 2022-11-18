@@ -88,9 +88,8 @@ namespace upc {
     /// * You can use the standard features (pot, r1norm, rmaxnorm),
     ///   or compute and use other ones.
     /// \DONE
-    float minZcr = 5000.0;
-
-    if((pot < maxpot || r1norm < u1norm) && rmaxnorm < umaxnorm || zcr > minZcr){
+    // if((pot < maxpot || r1norm < u1norm) && rmaxnorm < umaxnorm || zcr > minZcr){
+    if(rmaxnorm < umaxnorm || zcr > minZcr){
       return true;
     } else {
       return false;
@@ -137,7 +136,7 @@ namespace upc {
     //You can print these (and other) features, look at them using wavesurfer
     //Based on that, implement a rule for unvoiced
     //change to #if 1 and compile
-#if 1
+#if 0
     if (r[0] > 0.0F)
     printf("%4.4f\t%4.4f\t%4.4f\t%4.4f\n", pot, r[1]/r[0], r[lag]/r[0], zcr);
     // printf("%4.4f", pot);
