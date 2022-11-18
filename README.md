@@ -53,11 +53,11 @@ for (iR = iRMax = r.begin() + npitch_min; iR < r.begin() + npitch_max; iR++) {
    * Implemente la regla de decisión sonoro o sordo e inserte el código correspondiente.
 
 ```cpp
-  bool PitchAnalyzer::unvoiced(float pot, float r1norm, float rmaxnorm) const{
-    if ((pot < maxpot || r1norm < u1norm) && rmaxnorm < umaxnorm){
+  bool PitchAnalyzer::unvoiced(float pot, float r1norm, float rmaxnorm, float zcr) const {
+    float minZcr = 5000.0;
+    if((pot < maxpot || r1norm < u1norm) && rmaxnorm < umaxnorm || zcr > minZcr){
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }
@@ -80,8 +80,34 @@ for (iR = iRMax = r.begin() + npitch_min; iR < r.begin() + npitch_max; iR++) {
 
 ![Figure_1](https://user-images.githubusercontent.com/82904867/202670072-6c7e8221-ce75-45fe-aa81-62fc8e3ad7f8.png)
 
+**La tasa de cruces por cero y la autocorrelación en el segundo máximo son los dos parametros más relevantas para detectar si el señal es sordo o sonoro.
+Por tanto el objetivo será optimizar estos dos parámetros**
+
+![Figure_3](https://user-images.githubusercontent.com/82904867/202676426-08962d2c-19f2-4792-81e7-12a6deb3cf46.png)
+
+
 
 Puede considerar, también, la conveniencia de usar la tasa de cruces por cero.
+
+```cpp
+  int sgn(float x) {
+    if (x > 0.0) return 1;
+    if (x < 0.0) return -1;
+    return 0;
+  }
+
+  float PitchAnalyzer::compute_zcr(std::vector<float> & x) const {
+    int N = x.size();
+    float fm = samplingFreq;
+    float sum = 0.0;
+    for (int i = 0; i < N; i++){
+        if (sgn(x[i]) != sgn(x[i-1])){
+            sum++;
+        }
+    }
+    return fm/(2*(N-1))*sum;
+  }
+```
 
 Recuerde configurar los paneles de datos para que el desplazamiento de ventana sea el adecuado, que
 en esta práctica es de 15 ms.
