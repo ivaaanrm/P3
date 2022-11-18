@@ -31,6 +31,7 @@ Options:
     -z REAL, --minZcr=REAL  Umbral del minimo de la tasa de cruces por cero [default: 5000.0] 
     -u REAL, --u1norm=REAL  Umbral  de la autocorrelación [default: 0.953] 
     -p REAL, --maxpot=REAL  Umbral del maximo de la potencia [default: -38.0] 
+    -a REAL, --alpha=REAL  Umbral del maximo de la potencia [default: 0.00049] 
 
 Arguments:
     input-wav   Wave file with the audio signal
@@ -56,6 +57,7 @@ int main(int argc, const char *argv[]) {
   float minZcr = std::stof(args["--minZcr"].asString());
   float u1norm = std::stof(args["--u1norm"].asString());
   float maxpot = std::stof(args["--maxpot"].asString());
+  float alpha = std::stof(args["--alpha"].asString());
 
 
   // Read input sound file
@@ -83,7 +85,7 @@ int main(int argc, const char *argv[]) {
   vector<float>::iterator iX;
   vector<float> f0;
   float f = 0.0;
-  float alpha = 0.00049;
+  // float alpha = 0.00049;
   for (iX = x.begin(); iX < x.end(); iX++) {
 
     if (*iX < alpha && *iX > -alpha){ 

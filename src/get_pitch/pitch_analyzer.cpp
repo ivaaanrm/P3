@@ -45,12 +45,6 @@ namespace upc {
     return fm/(2*(N-1))*sum;
   }
 
-
-
-
-
-
-
   void PitchAnalyzer::set_window(Window win_type) {
     if (frameLen == 0)
       return;
@@ -88,8 +82,8 @@ namespace upc {
     /// * You can use the standard features (pot, r1norm, rmaxnorm),
     ///   or compute and use other ones.
     /// \DONE
-    // if((pot < maxpot || r1norm < u1norm) && rmaxnorm < umaxnorm || zcr > minZcr){
-    if(rmaxnorm < umaxnorm || zcr > minZcr){
+    if((pot < maxpot && r1norm < u1norm) || (rmaxnorm < umaxnorm || zcr > minZcr)){
+    // if(rmaxnorm < umaxnorm || zcr > minZcr){
       return true;
     } else {
       return false;
