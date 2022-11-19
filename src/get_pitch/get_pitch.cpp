@@ -28,9 +28,9 @@ Options:
     -h, --help  Show this screen
     --version   Show the version of the project
     -m REAL, --umaxnorm=REAL  Umbral del maximo de la autocorrelación [default: 0.378] 
-    -z REAL, --minZcr=REAL  Umbral del minimo de la tasa de cruces por cero [default: 3440.0] 
-    -u REAL, --u1norm=REAL  Umbral  de la autocorrelación [default: 0.975] 
-    -p REAL, --maxpot=REAL  Umbral del maximo de la potencia [default: -46.5] 
+    -z REAL, --minZcr=REAL  Umbral del minimo de la tasa de cruces por cero [default: 3445.0] 
+    -u REAL, --u1norm=REAL  Umbral  de la autocorrelación [default: 0.9765] 
+    -p REAL, --maxpot=REAL  Umbral del maximo de la potencia [default: -46.35] 
     -a REAL, --alpha=REAL  Umbral del maximo de la potencia [default: 0.003] 
 
 Arguments:
