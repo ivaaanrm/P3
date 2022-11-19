@@ -104,11 +104,17 @@ int main(int argc, const char *argv[]) {
   /// or time-warping may be used.
   /// \DONE
 
+  vector<float> median(f0);
+  float min1, max1;
+
+
   float avgPitch = 0;
   int numPitch = 0;
 
+
   // filter that eliminates the single voiced frames
   vector<float>::iterator iF0;
+
   for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
     if (*iF0 != 0.0) {
       avgPitch += *iF0;
@@ -147,6 +153,15 @@ int main(int argc, const char *argv[]) {
       }
     }
   }
+
+  // filter that fills double zero holes
+  for (iF0 = f0.begin(); iF0 < f0.end()-3; iF0++) {
+    if (*iF0 != 0.0 && *(iF0 + 1) == 0.0 && *(iF0 + 2) == 0.0 && *(iF0 + 3) != 0.0) {
+      *(iF0 + 1) = (*(iF0) + *(iF0 + 3)) / 2;
+      *(iF0 + 2) = (*(iF0) + *(iF0 + 3)) / 2;
+    }
+  }
+
 
   avgPitch = avgPitch / numPitch;
 

@@ -82,7 +82,7 @@ namespace upc {
     /// * You can use the standard features (pot, r1norm, rmaxnorm),
     ///   or compute and use other ones.
     /// \DONE
-    if((pot < maxpot && r1norm < u1norm) || (rmaxnorm < umaxnorm || zcr > minZcr)){
+    if((pot < maxpot && r1norm < u1norm) || rmaxnorm < umaxnorm || zcr > minZcr){
     // if(rmaxnorm < umaxnorm || zcr > minZcr){
       return true;
     } else {
