@@ -31,7 +31,9 @@ Options:
     -z REAL, --minZcr=REAL  Umbral del minimo de la tasa de cruces por cero [default: 3445.0] 
     -u REAL, --u1norm=REAL  Umbral  de la autocorrelación [default: 0.9765] 
     -p REAL, --maxpot=REAL  Umbral del maximo de la potencia [default: -46.35] 
-    -a REAL, --alpha=REAL  Umbral del maximo de la potencia [default: 0.003] 
+    -a REAL, --alpha=REAL  Umbral central clipping [default: 0.003] 
+    -x REAL, --th1=REAL  Threshold post-processing [default: 1.6] 
+    -y REAL, --th2=REAL  Factor post-processing [default: 0.9] 
 
 Arguments:
     input-wav   Wave file with the audio signal
@@ -58,6 +60,8 @@ int main(int argc, const char *argv[]) {
   float u1norm = std::stof(args["--u1norm"].asString());
   float maxpot = std::stof(args["--maxpot"].asString());
   float alpha = std::stof(args["--alpha"].asString());
+  float th1 = std::stof(args["--th1"].asString());
+  float th2 = std::stof(args["--th2"].asString());
 
 
   // Read input sound file
@@ -103,10 +107,6 @@ int main(int argc, const char *argv[]) {
   /// Postprocess the estimation in order to supress errors. For instance, a median filter
   /// or time-warping may be used.
   /// \DONE
-
-  vector<float> median(f0);
-  float min1, max1;
-
 
   float avgPitch = 0;
   int numPitch = 0;
@@ -167,8 +167,8 @@ int main(int argc, const char *argv[]) {
 
 
   for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
-    if (*iF0 >= avgPitch*1.6){
-      *iF0 = avgPitch*0.9;
+    if (*iF0 >= avgPitch*th1){
+      *iF0 = avgPitch*th2;
     }
   }
 
