@@ -150,9 +150,10 @@ int main(int argc, const char *argv[]) {
 
   avgPitch = avgPitch / numPitch;
 
+
   for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
-    if (*iF0 >= avgPitch*1.46){
-      *iF0 = avgPitch*0.81;
+    if (*iF0 >= avgPitch*1.6){
+      *iF0 = avgPitch*0.9;
     }
   }
 
