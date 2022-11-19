@@ -75,6 +75,17 @@ with open("opt-res.log", "a") as f:
 #                         f"{umaxnorm}", "-z", f"{minZcr}", "-u", f"{u1norm}", "-p", f"{maxpot}","-a", f"{alpha}"])
 #                     proc2 = subprocess.run(["pitch_evaluate", "prueba.f0ref"])
 
+ 
+# for alpha in alpha_:
+#     for maxpot in maxpot_:
+#         for u1norm in u1nomr_:
+#             for minZcr in minZcr_:
+#                 for umaxnorm in umaxnorm_:
+#                     print(5*"*" + f"{umaxnorm} | {minZcr} | {u1norm} | {maxpot} | {alpha}")
+#                     proc = subprocess.run(["/root/PAV/bin/get_pitch", "prueba.wav","prueba.f0", "-m", 
+#                         f"{umaxnorm}", "-z", f"{minZcr}", "-u", f"{u1norm}", "-p", f"{maxpot}","-a", f"{alpha}"])
+#                     proc2 = subprocess.run(["/root/PAV/bin/pitch_evaluate", "prueba.f0ref"])
+
 print("The exit code was: %d" % proc.returncode)
 
 print(max_res)
