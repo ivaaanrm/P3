@@ -53,9 +53,8 @@ for (iR = iRMax = r.begin() + npitch_min; iR < r.begin() + npitch_max; iR++) {
    * Implemente la regla de decisión sonoro o sordo e inserte el código correspondiente.
 
 ```cpp
-  bool PitchAnalyzer::unvoiced(float pot, float r1norm, float rmaxnorm, float zcr) const {
-    float minZcr = 5000.0;
-    if((pot < maxpot || r1norm < u1norm) && rmaxnorm < umaxnorm || zcr > minZcr){
+ bool PitchAnalyzer::unvoiced(float pot, float r1norm, float rmaxnorm, float zcr) const {
+    if((pot < maxpot && r1norm < u1norm) || (rmaxnorm < umaxnorm || zcr > minZcr)){
       return true;
     } else {
       return false;
@@ -122,7 +121,8 @@ en esta práctica es de 15 ms.
     y el *score* TOTAL proporcionados por `pitch_evaluate` en la evaluación de la base de datos 
 	`pitch_db/train`..
 
-![image](https://user-images.githubusercontent.com/82904867/202567190-69d3aa62-4180-4f0e-a246-3b202ac64fef.png)
+![image](https://user-images.githubusercontent.com/82904867/202844778-a5400eb9-a1ed-4bed-95ce-24adf418b9a2.png)
+
 
 
 Ejercicios de ampliación
@@ -137,9 +137,11 @@ Ejercicios de ampliación
 
   * Inserte un *pantallazo* en el que se vea el mensaje de ayuda del programa y un ejemplo de utilización
     con los argumentos añadidos.
-    
-    ![image](https://user-images.githubusercontent.com/82904867/202566452-fa8def99-478e-412a-8718-0e9a0675a5d8.png)
-![image](https://user-images.githubusercontent.com/82904867/202570027-64760fd3-8d25-4bc8-a129-886995fc54f1.png)
+
+![image](https://user-images.githubusercontent.com/82904867/202844843-a9d276ab-fe61-4575-a148-aa3ece50b32f.png)
+
+
+![image](https://user-images.githubusercontent.com/82904867/202845046-fe24b0b4-4a66-4f19-91c4-fb922491879c.png)
 
 
 - Implemente las técnicas que considere oportunas para optimizar las prestaciones del sistema de estimación
@@ -147,6 +149,8 @@ Ejercicios de ampliación
 
   Entre las posibles mejoras, puede escoger una o más de las siguientes:
   * Enventanado de Hamming
+  
+  **Depués de hacer pruebas con el enventanado de Hamming el score final de predicción era inferior al de la ventana rectanglar. Por tanto finalmente hemos usado el enventanado original.**
 
 ```cpp
 case HAMMING:
@@ -161,20 +165,13 @@ break;
   **Como técnica de preprocesado hemos decidio usar center clipping que consiste en anular los valores de x[n] de magnitud pequeña.**
    ```cpp
   vector<float>::iterator iX;
-  vector<float> f0;
-  float alpha = 0.00071;
   float f = 0.0;
-  for (iX = x.begin(); iX + n_len < x.end(); iX = iX + n_shift){
-    // anulamos los valores de x[n] de magnitud pequeña.
-    if (*iX<alpha && * iX> - alpha){
-      f = 0.0;
+  // float alpha = 0.00049;
+  for (iX = x.begin(); iX < x.end(); iX++) {
+    if (*iX < alpha && *iX > -alpha){ 
+      *iX = 0.0;
     }
-    else{
-      f = analyzer(iX, iX + n_len);
-    }
-    f0.push_back(f);
   }
-
 ```
   
   * Técnicas de postprocesado: filtro de mediana, *dynamic time warping*, etc.
@@ -239,6 +236,73 @@ break;
     (AMDF), etc.
   * Optimización **demostrable** de los parámetros que gobiernan el estimador, en concreto, de los que
     gobiernan la decisión sonoro/sordo.
+    
+    **Para la optimización de parametros hemos modificado el run_get_pitch para poder pasar parametros. Con python ejecutamos el programa iteradamente optimizando los parametros usando toda la base de datos de entrenamiento**
+    
+    ```python
+    """ optimizer.py """
+    with open("opt-res.log", "a") as f:
+    for umaxnorm in umaxnorm_:
+        for minZcr in minZcr_:
+            for u1norm in u1norm_:
+                for maxpot in maxpot_:
+                    for alpha in alpha_:
+
+                        proc = subprocess.run(["run_get_pitch", "-m", f"{umaxnorm}", "-z", f"{minZcr}", "-u",f"{u1norm}", 
+							"-p",f"{maxpot}", "-a", f"{alpha}" ])
+                        proc1 = subprocess.Popen("pitch_evaluate pitch_db/train/*f0ref", shell=True, stdout=subprocess.PIPE).stdout.read()
+
+                        res_str = str(proc1).split("TOTAL")[-1]
+                        res = float(res_str.split(":\\t")[1].split(" ")[0])
+
+                        if res >= max_res["Total"]:
+                            max_res["Total"] = res
+                            max_res["umaxnorm"] = umaxnorm
+                            max_res["zcr"] = minZcr
+                            max_res["u1"] = u1norm
+                            max_res["pot"] = maxpot
+                            max_res["alpha"] = alpha
+                        
+                        progress.append(max_res["Total"])
+
+                        params = f"Params: umaxnorm: {umaxnorm} | zcr: {minZcr} | u1nomr: {u1norm} | maxpot: {maxpot} | alpha: {alpha}\n"
+                        result = f"({i}/{totales})TOTAL --> {res}\n------------------\n"
+                        f.write(params)
+                        f.write(result)
+                        print(params)
+                        print(result)
+                        i = i + 1
+    
+    ```
+    
+    Posteriormente filtramos para obtener el mejor resultado
+    
+    ````
+	    Params: umaxnorm: 0.378 | zcr: 3430 | u1nomr: 0.975 | maxpot: -46.5 | alpha: 0.003
+	(591/3600)TOTAL --> 91.72
+	------------------
+	Params: umaxnorm: 0.378 | zcr: 3430 | u1nomr: 0.975 | maxpot: -46.5 | alpha: 0.0035
+	(592/3600)TOTAL --> 91.64
+	------------------
+	Params: umaxnorm: 0.378 | zcr: 3440 | u1nomr: 0.975 | maxpot: -46.5 | alpha: 0.002
+	(593/3600)TOTAL --> 91.54
+	------------------
+	Params: umaxnorm: 0.378 | zcr: 3440 | u1nomr: 0.975 | maxpot: -46.5 | alpha: 0.0025
+	(594/3600)TOTAL --> 91.61
+	------------------
+	Params: umaxnorm: 0.378 | zcr: 3440 | u1nomr: 0.975 | maxpot: -46.5 | alpha: 0.003
+	(595/3600)TOTAL --> 91.73
+	------------------
+	Params: umaxnorm: 0.378 | zcr: 3440 | u1nomr: 0.975 | maxpot: -46.5 | alpha: 0.0035
+	(596/3600)TOTAL --> 91.65
+	------------------
+	Params: umaxnorm: 0.378 | zcr: 3450 | u1nomr: 0.975 | maxpot: -46.5 | alpha: 0.002
+	(597/3600)TOTAL --> 91.54
+	------------------
+	Params: umaxnorm: 0.378 | zcr: 3450 | u1nomr: 0.975 | maxpot: -46.5 | alpha: 0.0025
+	(598/3600)TOTAL --> 91.62
+	------------------
+    ````
   * Cualquier otra técnica que se le pueda ocurrir o encuentre en la literatura.
 
   Encontrará más información acerca de estas técnicas en las [Transparencias del Curso](https://atenea.upc.edu/pluginfile.php/2908770/mod_resource/content/3/2b_PS%20Techniques.pdf)
