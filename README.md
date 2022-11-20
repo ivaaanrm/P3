@@ -325,11 +325,6 @@ break;
   En la siguiente gráfica se muestra la prograsión de mejora por cada iteración al optimizar los parámetros.
   
   ![Figure_1](https://user-images.githubusercontent.com/82904867/202923907-9c29e2c0-be85-4763-a5c8-e66e307cb997.png)
-  
-  Refinando los parámetros
-  
-  ![Figure_2png](https://user-images.githubusercontent.com/82904867/202923950-d49600e8-10e4-4733-af98-a68f25a508ce.png)
-
 
 
   También se valorará la realización de un estudio de los parámetros involucrados. Por ejemplo, si se opta
