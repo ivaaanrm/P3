@@ -121,8 +121,7 @@ en esta práctica es de 15 ms.
     y el *score* TOTAL proporcionados por `pitch_evaluate` en la evaluación de la base de datos 
 	`pitch_db/train`..
 
-![image](https://user-images.githubusercontent.com/82904867/202844778-a5400eb9-a1ed-4bed-95ce-24adf418b9a2.png)
-
+![image](https://user-images.githubusercontent.com/82904867/202923581-3b02ff81-e747-412c-9f0e-239255be1088.png)
 
 
 Ejercicios de ampliación
@@ -138,7 +137,7 @@ Ejercicios de ampliación
   * Inserte un *pantallazo* en el que se vea el mensaje de ayuda del programa y un ejemplo de utilización
     con los argumentos añadidos.
 
-![image](https://user-images.githubusercontent.com/82904867/202844843-a9d276ab-fe61-4575-a148-aa3ece50b32f.png)
+![image](https://user-images.githubusercontent.com/82904867/202923624-5c013ea8-0954-45ff-b041-cb9049860e59.png)
 
 
 ![image](https://user-images.githubusercontent.com/82904867/202845046-fe24b0b4-4a66-4f19-91c4-fb922491879c.png)
@@ -176,7 +175,7 @@ break;
   
   * Técnicas de postprocesado: filtro de mediana, *dynamic time warping*, etc.
   
-   **Como técnica de preprocesado hemos decidio usar filtros de mediana con el objetivo de eliminar valores nulos en medio tramos sonoros y valores de pitch en medio de tramos sordos.**
+   **Como técnica de postprocesado hemos decidido crear un filtro que corrige valores nulos en medio tramos sonoros y valores de pitch en medio de tramos sordos. Con este método obtenemos mejores resultados que con el filtro de mediana.**
   
 ```cpp
   float avgPitch = 0;
@@ -228,6 +227,14 @@ break;
   for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
     if (*iF0 >= avgPitch*1.46){
       *iF0 = avgPitch*0.81;
+    }
+  }
+  
+    // filter that fills double zero holes
+  for (iF0 = f0.begin(); iF0 < f0.end()-3; iF0++) {
+    if (*iF0 != 0.0 && *(iF0 + 1) == 0.0 && *(iF0 + 2) == 0.0 && *(iF0 + 3) != 0.0) {
+      *(iF0 + 1) = (*(iF0) + *(iF0 + 3)) / 2;
+      *(iF0 + 2) = (*(iF0) + *(iF0 + 3)) / 2;
     }
   }
 ```
