@@ -221,21 +221,24 @@ break;
       }
     }
   }
+  
+      // filter that fills double zero holes
+  for (iF0 = f0.begin(); iF0 < f0.end()-3; iF0++) {
+    if (*iF0 != 0.0 && *(iF0 + 1) == 0.0 && *(iF0 + 2) == 0.0 && *(iF0 + 3) != 0.0) {
+      *(iF0 + 1) = (*(iF0) + *(iF0 + 3)) / 2;
+      *(iF0 + 2) = (*(iF0) + *(iF0 + 3)) / 2;
+    }
 
   avgPitch = avgPitch / numPitch;
 
+// valores de pitch por encima de un umbral los corregimos al velor de la media
   for (iF0 = f0.begin(); iF0 < f0.end(); iF0++) {
     if (*iF0 >= avgPitch*1.46){
       *iF0 = avgPitch*0.81;
     }
   }
   
-    // filter that fills double zero holes
-  for (iF0 = f0.begin(); iF0 < f0.end()-3; iF0++) {
-    if (*iF0 != 0.0 && *(iF0 + 1) == 0.0 && *(iF0 + 2) == 0.0 && *(iF0 + 3) != 0.0) {
-      *(iF0 + 1) = (*(iF0) + *(iF0 + 3)) / 2;
-      *(iF0 + 2) = (*(iF0) + *(iF0 + 3)) / 2;
-    }
+
   }
 ```
   
@@ -318,6 +321,16 @@ break;
 
   Incluya, a continuación, una explicación de las técnicas incorporadas al estimador. Se valorará la
   inclusión de gráficas, tablas, código o cualquier otra cosa que ayude a comprender el trabajo realizado.
+  
+  En la siguiente gráfica se muestra la prograsión de mejora por cada iteración al optimizar los parámetros.
+  
+  ![Figure_1](https://user-images.githubusercontent.com/82904867/202923907-9c29e2c0-be85-4763-a5c8-e66e307cb997.png)
+  
+  Refinando los parámetros
+  
+  ![Figure_2png](https://user-images.githubusercontent.com/82904867/202923950-d49600e8-10e4-4733-af98-a68f25a508ce.png)
+
+
 
   También se valorará la realización de un estudio de los parámetros involucrados. Por ejemplo, si se opta
   por implementar el filtro de mediana, se valorará el análisis de los resultados obtenidos en función de
