@@ -331,6 +331,10 @@ break;
   por implementar el filtro de mediana, se valorará el análisis de los resultados obtenidos en función de
   la longitud del filtro.
    
+   
+Además, hemos creado un jupyter notebook para poder evaluar rápidamente nuestros resultados desde cualquier dispositivo y lugar, puesto que está en un google colab:
+
+   https://colab.research.google.com/drive/1WJZ3Tlqc9RwIs1UxhHoXZbPcTQq3Kwwj?usp=sharing#scrollTo=BB6moQ3v61Z0
 
 Evaluación *ciega* del estimador
 -------------------------------
