@@ -19,7 +19,7 @@ alpha_ = np.arange(0.002,0.004,0.0005)
 th1_ = np.arange(1.5, 1.8, 0.1)
 th2_ = np.arange(0.6, 1.2, 0.3)
 
-iteraciones = 0;
+iteraciones = 0
 
 max_res = {
     "Total": 0,
